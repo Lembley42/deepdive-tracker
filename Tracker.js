@@ -1,4 +1,4 @@
-(function(window, document) {
+(function(window) {
 function DeepDive(project_id) {
     this.project_id = project_id;
 }
@@ -7,10 +7,10 @@ DeepDive.prototype = {
     sendData: function(data, event) {
     var params = new URLSearchParams(data).toString();
     var url = 'https://collect.backend.deep-dive.cloud/' + 
-            '?event=' + encodeURIComponent(event) + 
-            '&' + params + 
-            '&project_id=' + encodeURIComponent(this.project_id) + 
-            '&_=' + new Date().getTime();
+                '?event=' + encodeURIComponent(event) + 
+                '&' + params + 
+                '&project_id=' + encodeURIComponent(this.project_id) + 
+                '&_=' + new Date().getTime();
 
     // Create a pixel for tracking
     var pixel = new Image();
@@ -222,25 +222,17 @@ DeepDive.prototype = {
     }
 };
 
-function initializeDeepDive() {
-    // Retrieve project_id from GTM if available
-    var project_id = window.project_id || window.deepdiveProjectId;
+// Expose the deepdive object globally with an init function
+window.deepdive = {
+    instance: null,
 
-    if (!project_id) {
-    console.warn("DeepDive: No project_id found. Please set it in GTM or as window.deepdiveProjectId.");
-    return;
+    // Initialize deepdive with the given project ID
+    init: function(project_id) {
+    if (!this.instance) {
+        this.instance = new DeepDive(project_id);
+        this.instance.pageview(); // Optionally, call pageview on init
     }
-
-    // Instantiate DeepDive and make pageview call
-    var deepdive = new DeepDive(project_id);
-    deepdive.pageview();
-    window.deepdive = deepdive;
-}
-
-// Initialize after DOM loads to ensure GTM has set project_id
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeDeepDive);
-} else {
-    initializeDeepDive();
-}
-})(window, document);
+    }
+};
+})(window);
+  
