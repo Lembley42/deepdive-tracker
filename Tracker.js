@@ -222,16 +222,16 @@ Deepdive.prototype = {
     }
 };
 
-// Expose the deepdive object globally with an init function
-window.deepdive = {
+  // Expose the deepdive object globally with an init function
+  window.deepdive = {
     instance: null,
 
     // Initialize deepdive with the given project ID
     init: function(project_id) {
-    if (!this.instance) {
+      if (!this.instance) {
         this.instance = new Deepdive(project_id);
         this.instance.pageview(); // Optionally, call pageview on init
+      }
     }
-    }
-};
+  };
 })(window);
