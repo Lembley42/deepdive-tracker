@@ -1,9 +1,9 @@
 (function(window) {
-function DeepDive(project_id) {
+function deepdive(project_id) {
     this.project_id = project_id;
 }
 
-DeepDive.prototype = {
+deepdive.prototype = {
     sendData: function(data, event) {
     var params = new URLSearchParams(data).toString();
     var url = 'https://collect.backend.deep-dive.cloud/' + 
@@ -222,6 +222,9 @@ DeepDive.prototype = {
     }
 };
 
+// Attach deepdive to the window for global access
+window.deepdive = deepdive;
+
 // Expose the deepdive object globally with an init function
 window.deepdive = {
     instance: null,
@@ -229,10 +232,9 @@ window.deepdive = {
     // Initialize deepdive with the given project ID
     init: function(project_id) {
     if (!this.instance) {
-        this.instance = new DeepDive(project_id);
+        this.instance = new deepdive(project_id);
         this.instance.pageview(); // Optionally, call pageview on init
     }
     }
 };
 })(window);
-  
