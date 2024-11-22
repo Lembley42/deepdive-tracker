@@ -207,10 +207,20 @@ DeepDive.prototype = {
 
     // Sent with every event
     _getCommonData: function() {
+        var date = new Date();
+        var pad = function(num) { return ('00' + Math.abs(num)).slice(-2); };  
+        var utcTime = date.getUTCFullYear() +
+                        '-' + pad(date.getUTCMonth() + 1) +
+                        '-' + pad(date.getUTCDate()) +
+                        'T' + pad(date.getUTCHours()) +
+                        ':' + pad(date.getUTCMinutes()) +
+                        ':' + pad(date.getUTCSeconds()) +
+                        'Z';  // Z denotes UTC time
+    
         var commonData = {
             user_id: this._getUserId(),
             session_id: this._getSessionId(),
-            timestamp: new Date().toISOString(),
+            timestamp: utcTime,
             url: window.location.href,
             title: document.title,
             referrer: document.referrer || 'direct',
