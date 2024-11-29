@@ -7,7 +7,7 @@ DeepDive.prototype = {
     sendData: function(data, event) {
         var params = new URLSearchParams(data).toString();
         var url = 'https://collect.backend.deep-dive.cloud/' + 
-                '?event=' + encodeURIComponent(event) + 
+                '?event_type=' + encodeURIComponent(event) + 
                 '&' + params + 
                 '&project_id=' + encodeURIComponent(this.project_id) +
                 '&_=' + new Date().getTime();
@@ -133,16 +133,16 @@ DeepDive.prototype = {
     },
 
     _getUserId: function() {
-    var userId = this._getStorageItem('dd_uid');
+    var userId = this._getStorageItem('deepdive_userId');
     if (!userId) {
         userId = this._generateUUID();
-        this._setStorageItem('dd_uid', userId, 365);
+        this._setStorageItem('deepdive_userId', userId, 365);
     }
     return userId;
     },
 
     _getSessionId: function() {
-    var sessionValue = this._getStorageItem('dd_sid');
+    var sessionValue = this._getStorageItem('deepdive_sessionId');
     var now = new Date().getTime();
 
     if (!sessionValue) {
@@ -156,14 +156,14 @@ DeepDive.prototype = {
     if (now - lastTimestamp > 30 * 60 * 1000) { // 30 minutes
         return this._createSession(now);
     } else {
-        this._setStorageItem('dd_sid', sessionId + '_' + now, 1/48); // 30 minutes
+        this._setStorageItem('deepdive_userId', sessionId + '_' + now, 1/48); // 30 minutes
         return sessionId;
     }
     },
 
     _createSession: function(timestamp) {
     var sessionId = this._generateUUID();
-    this._setStorageItem('dd_sid', sessionId + '_' + timestamp, 1/48); // 30 minutes
+    this._setStorageItem('deepdive_sessionId', sessionId + '_' + timestamp, 1/48); // 30 minutes
     return sessionId;
     },
 
@@ -202,7 +202,7 @@ DeepDive.prototype = {
     for (var browser in browsers) {
         if (browsers[browser].test(ua)) return browser;
     }
-    return 'Other';
+    return 'undefined';
     },
 
     // Sent with every event
@@ -211,10 +211,10 @@ DeepDive.prototype = {
             user_id: this._getUserId(),
             session_id: this._getSessionId(),
             timestamp: new Date().toISOString(),
-            url: window.location.href,
-            title: document.title,
-            referrer: document.referrer || 'direct',
-            language: navigator.language
+            page_url: window.location.href,
+            page_title: document.title,
+            referrer_url: document.referrer || 'direct',
+            language_code: navigator.language
         };
 
         // Add debug_id if present
