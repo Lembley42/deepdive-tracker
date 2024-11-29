@@ -133,16 +133,16 @@ DeepDive.prototype = {
     },
 
     _getUserId: function() {
-    var userId = this._getStorageItem('deepdive_userId');
+    var userId = this._getStorageItem('dd_uid');
     if (!userId) {
         userId = this._generateUUID();
-        this._setStorageItem('deepdive_userId', userId, 365);
+        this._setStorageItem('dd_uid', userId, 365);
     }
     return userId;
     },
 
     _getSessionId: function() {
-    var sessionValue = this._getStorageItem('deepdive_sessionId');
+    var sessionValue = this._getStorageItem('dd_sid');
     var now = new Date().getTime();
 
     if (!sessionValue) {
@@ -156,14 +156,14 @@ DeepDive.prototype = {
     if (now - lastTimestamp > 30 * 60 * 1000) { // 30 minutes
         return this._createSession(now);
     } else {
-        this._setStorageItem('deepdive_userId', sessionId + '_' + now, 1/48); // 30 minutes
+        this._setStorageItem('dd_uid', sessionId + '_' + now, 1/48); // 30 minutes
         return sessionId;
     }
     },
 
     _createSession: function(timestamp) {
     var sessionId = this._generateUUID();
-    this._setStorageItem('deepdive_sessionId', sessionId + '_' + timestamp, 1/48); // 30 minutes
+    this._setStorageItem('dd_sid', sessionId + '_' + timestamp, 1/48); // 30 minutes
     return sessionId;
     },
 
