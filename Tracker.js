@@ -156,7 +156,7 @@ DeepDive.prototype = {
     if (now - lastTimestamp > 30 * 60 * 1000) { // 30 minutes
         return this._createSession(now);
     } else {
-        this._setStorageItem('dd_uid', sessionId + '_' + now, 1/48); // 30 minutes
+        this._setStorageItem('dd_sid', sessionId + '_' + now, 1/48); // 30 minutes
         return sessionId;
     }
     },
